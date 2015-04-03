@@ -41,7 +41,32 @@ initWorld = World initBoard Black
 -- Play a move on the board; return 'Nothing' if the move is invalid
 -- (e.g. outside the range of the board, or there is a piece already there)
 makeMove :: Board -> Col -> Position -> Maybe Board
-makeMove = undefined
+makeMove board color pos = 
+    | (posWithinBounds pos board) && (cellAtPosIsEmpty pos board)
+        = board (size board) (target board) ((pieces board):(pos, color))
+    | otherwise = Nothing
+
+
+-- Checks if position is within bounds of board.
+posWithinBounds :: Position -> Board -> Bool
+posWithinBounds pos board = 
+    if(fst(pos) < 0)
+        False
+    if (snd(pos) < 0)
+        False
+    if(fst(pos) > (size board))
+        False
+    if(snd(pos) > (size board))
+        False
+    else True
+
+-- Checks if position is empty on board
+cellAtPosIsEmpty :: Position -> Board -> Bool
+cellAtPosIsEmpty pos board= 
+    let bPieces = (pieces board)
+    if [True, x <- bPieces, fst x == pos]
+        False
+    else True
 
 -- Check whether the board is in a winning state for either player.
 -- Returns 'Nothing' if neither player has won yet
