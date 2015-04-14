@@ -89,8 +89,8 @@ pieceAtPos pos board
 -- at the position of the last added piece
 checkWon :: Board -> Maybe Col
 checkWon board
-    | checkWonDirection latestPiece board   = Just (snd latestPiece)
-    | otherwise                             = Nothing
+    | checkWonAllDirections latestPiece board   = Just (snd latestPiece)
+    | otherwise                                 = Nothing
     where latestPiece = head (pieces board)
 
 -- Runs the checking functions in all directions looking for a winning condition for the piece provided.
