@@ -79,7 +79,7 @@ cellAtPosIsEmpty pos board
 pieceAtPos :: Position -> Board -> Maybe (Position, Col)
 pieceAtPos pos board
         | null matchingPos      = Nothing
-        | otherwise             = Just (head matchingPos)
+        | otherwise             = Just $ head matchingPos
         where matchingPos = [x | x <- (pieces board), fst x == pos]
 
 -- Check whether the board is in a winning state for either player.
@@ -89,7 +89,7 @@ pieceAtPos pos board
 -- at the position of the last added piece
 checkWon :: Board -> Maybe Col
 checkWon board
-    | checkWonAllDirections latestPiece board   = Just (snd latestPiece)
+    | checkWonAllDirections latestPiece board   = Just $ snd latestPiece
     | otherwise                                 = Nothing
     where latestPiece = head (pieces board)
 
@@ -152,7 +152,7 @@ isSameColor piece1 piece2
 getColAtPos :: Position -> Board -> Maybe Col
 getColAtPos pos board
     | isNothing piece       = Nothing
-    | otherwise             = Just (snd (fromJust piece))
+    | otherwise             = Just $ snd $ fromJust piece
     where  piece = pieceAtPos pos board
 
 -- An evaluation function for a minimax search. Given a board and a colour

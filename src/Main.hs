@@ -1,6 +1,7 @@
 module Main where
 
 import Graphics.Gloss
+import Graphics.Gloss.Data.Color
 
 import Board
 import Draw
@@ -21,7 +22,7 @@ import AI
 -- move
 
 main :: IO ()
-main = play (InWindow "Gomoku" (640, 480) (10, 10)) black 10
+main = play (InWindow "Gomoku" (600, 600) (10, 10)) (makeColorI 107 80 0 100) 10
             initWorld -- in Board.hs
             drawWorld -- in Draw.hs
             handleInput -- in Input.hs
