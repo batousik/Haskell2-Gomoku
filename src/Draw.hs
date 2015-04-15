@@ -16,7 +16,11 @@ drawWorld w = drawGrid w
 
 -- Draws the pieces on the board.
 drawPieces :: World -> Picture
-drawPieces = undefined
+drawPieces world = pictures $ map drawCircleOnGrid (pieces $ board $ world)
+
+-- Draws one circle on the grid
+drawCircleOnGrid :: (Position, Col) -> Picture
+drawCircleOnGrid piece = undefined
 
 -- Draws the grid of the board
 drawGrid :: World -> Picture
