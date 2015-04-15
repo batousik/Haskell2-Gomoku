@@ -26,6 +26,8 @@ handleInput :: Event -> World -> World
 handleInput (EventKey (MouseButton LeftButton) Up m (x, y)) b 
     = trace ("Left button pressed at: " ++ show (x,y) ++ " and was translated to click on coords: " ++ show (getBoardCoordFromClick (x,y) (board b))) (handleMouseClick  (x,y) b)
 -- Could use spacebar as the button to revert one move (extension).
+handleInput (EventKey (Char 'u') Up _ _) b
+    = handleUndo b
 handleInput (EventKey (Char k) Up _ _) b
     = trace ("Key " ++ show k ++ " up") b
 handleInput e b = b
@@ -49,4 +51,12 @@ getBoardCoordFromClick (x, y) board = ((floor $ distanceFromLeft/pixelsPerColumn
           pixelsPerColumnX = boardWidth/numberOfColumns
           pixelsPerColumnY = boardHeight/numberOfColumns
           distanceFromLeft = x-windowLeft
-          distanceFromTop = windowTop-y 
+          distanceFromTop = windowTop-y
+
+-- Handles undoing a move. Reverts the turn.
+-- Does nothing if there are no pieces on the board.
+handleUndo :: World -> World
+handleUndo world
+    | (length $ pieces $ board $ world) == 0 = world
+    | otherwise                              = World (newBoard) (other $ turn world) (winner world)
+    where newBoard = Board (size $ board $ world) (target $ board $ world) (tail $ pieces $ board $ world)
