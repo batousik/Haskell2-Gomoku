@@ -14,8 +14,11 @@ boardWidth = 600
 drawWorld :: World -> Picture
 drawWorld w = drawGrid w
 
+-- Draws the pieces on the board.
+drawPieces :: World -> Picture
+drawPieces = undefined
 
--- Draws the grid of the board (no pieces)
+-- Draws the grid of the board
 drawGrid :: World -> Picture
 drawGrid world = pictures [(drawGridHorizontal world), (drawGridVertical world)]
 
@@ -44,7 +47,3 @@ getVerticalLineCoordinates 0 boardSize = [(widthCoord,(-boardHeight/2)),(widthCo
     where widthCoord = (-boardWidth/2)
 getVerticalLineCoordinates div boardSize = [(widthCoord,(-boardHeight/2)),(widthCoord,boardHeight/2)]:(getVerticalLineCoordinates (div-1) boardSize)
     where widthCoord = (-boardWidth/2) + ((boardWidth/(fromIntegral boardSize))*(fromIntegral div))
-
-testfunction :: World -> Int
-testfunction world = size $ board $ world
-
