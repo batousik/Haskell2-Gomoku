@@ -3,6 +3,8 @@ module Draw(drawWorld) where
 import Graphics.Gloss
 import Board
 
+import Data.Maybe
+
 boardHeight = 600
 boardWidth = 600
 
@@ -15,7 +17,15 @@ boardTop = boardHeight/2
 -- This will need to extract the Board from the world state and draw it
 -- as a grid plus pieces.
 drawWorld :: World -> Picture
-drawWorld w = pictures $ [drawGrid w,drawPieces w]
+drawWorld w = pictures $ [drawGrid w,drawPieces w,drawBottomText w,drawTopText w]
+
+drawTopText :: World -> Picture
+drawTopText world
+    | isNothing (winner world)   = Blank
+    | otherwise                  = Translate 0 (boardTop + 40) $ Scale 0.2 0.2 $ Color white $ Text ("Winner is: " ++ (show $ fromJust $ winner world))
+
+drawBottomText :: World -> Picture
+drawBottomText world = Translate 0 (boardTop - boardHeight - 50) $ Scale 0.2 0.2 $ Color white $ Text ("Current turn: " ++ (show $ turn world))
 
 -- Draws the pieces on the board.
 drawPieces :: World -> Picture
