@@ -33,7 +33,7 @@ data Board = Board { size :: Int,
   deriving Show
 
 -- Default board is 6x6, target is 3 in a row, no initial pieces
-initBoard = Board 6 3 []
+initBoard = Board 10 5 []
 
 -- Feel free to extend this, and 'Board' above with anything you think
 -- will be useful (information for the AI, for example, such as where the
