@@ -9,10 +9,10 @@ import Data.Maybe
 
 import Debug.Trace
 
-windowHeight = 600
-windowWidth = 600
-windowLeft = (-windowWidth/2)
-windowTop = windowHeight/2
+boardHeight = 600
+boardWidth = 600
+windowLeft = (-boardWidth/2)
+windowTop = boardHeight/2
 
 -- Update the world state given an input event. Some sample input events
 -- are given; when they happen, there is a trace printed on the console
@@ -43,7 +43,7 @@ handleMouseClick clickPos world
 getBoardCoordFromClick :: (Float, Float) -> Board -> Position
 getBoardCoordFromClick (x, y) board = ((floor $ distanceFromLeft/pixelsPerColumnX),(floor $ distanceFromTop/pixelsPerColumnY))
     where numberOfColumns = fromIntegral $ size board
-          pixelsPerColumnX = windowWidth/numberOfColumns
-          pixelsPerColumnY = windowHeight/numberOfColumns
+          pixelsPerColumnX = boardWidth/numberOfColumns
+          pixelsPerColumnY = boardHeight/numberOfColumns
           distanceFromLeft = x-windowLeft
           distanceFromTop = windowTop-y 

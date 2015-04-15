@@ -6,21 +6,44 @@ import Board
 boardHeight = 600
 boardWidth = 600
 
+boardLeft = (-boardWidth/2)
+boardTop = boardHeight/2
+
 -- Given a world state, return a Picture which will render the world state.
 -- Currently just draws a single blue circle as a placeholder.
 --
 -- This will need to extract the Board from the world state and draw it
 -- as a grid plus pieces.
 drawWorld :: World -> Picture
-drawWorld w = drawGrid w
+drawWorld w = pictures $ [drawGrid w,drawPieces w]
 
 -- Draws the pieces on the board.
 drawPieces :: World -> Picture
-drawPieces world = pictures $ map drawCircleOnGrid (pieces $ board $ world)
+drawPieces world = pictures $ map (drawCircleOnGrid $ board world) (pieces $ board $ world)
 
 -- Draws one circle on the grid
-drawCircleOnGrid :: (Position, Col) -> Picture
-drawCircleOnGrid piece = undefined
+drawCircleOnGrid :: Board -> (Position, Col) -> Picture
+drawCircleOnGrid board piece = Translate circleX circleY (getCircleWithColor board piece)
+    where circleX = getCircleXCoord board $ fst piece
+          circleY = getCircleYCoord board $ fst piece
+          {-circlePic =  (getCircleColor (snd piece)) $ Circle circleRadius
+          circleRadius = ((boardWidth/(fromIntegral $ size board))/2)*0.75-}
+
+-- Gets the X coordinate of a circle in given position
+getCircleXCoord :: Board -> Position -> Float
+getCircleXCoord board pos = boardLeft + (squareWidth*(fromIntegral $ fst pos)) + (squareWidth/2)
+    where squareWidth = boardWidth/(fromIntegral $ size board)
+
+-- Gets the Y coordinate of a circle in given position
+getCircleYCoord :: Board -> Position -> Float
+getCircleYCoord board pos = boardTop - (squareHeight*(fromIntegral $ snd pos)) - (squareHeight/2)
+    where squareHeight = boardHeight/(fromIntegral $ size board)
+
+getCircleWithColor :: Board -> (Position, Col) -> Picture
+getCircleWithColor board (x, White) = Color white $ ThickCircle circleRadius 30
+    where circleRadius = ((boardWidth/(fromIntegral $ size board))/2)*0.50
+getCircleWithColor board (x, Black) = Color black $ ThickCircle circleRadius 30
+    where circleRadius = ((boardWidth/(fromIntegral $ size board))/2)*0.50
 
 -- Draws the grid of the board
 drawGrid :: World -> Picture
