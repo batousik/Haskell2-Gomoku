@@ -46,6 +46,21 @@ data World = World { board :: Board,
 
 initWorld = World initBoard Black Nothing
 
+-- Attempts to play a move. If move is successful return updated world. Include winner if there is one.
+-- If move wasnt successful, return unchanged world.
+attemptMove :: Position -> World -> World
+attemptMove pos world
+    | isNothing updatedBoard = world
+    | otherwise              = World (fromJust updatedBoard) (other $ turn world) (winner world)
+    where updatedBoard = makeMove (board world) (turn world) pos
+
+-- Checks if the world's board has a winner, and adds that player as the winner in the world if thats the case.
+isWinner :: World -> World
+isWinner world
+    | isNothing possibleWinner          = world
+    | otherwise                         = World (board world) (turn world) (possibleWinner)
+    where possibleWinner = checkWon (board world)
+ 
 -- Play a move on the board; return 'Nothing' if the move is invalid
 -- (e.g. outside the range of the board, or there is a piece already there)
 makeMove :: Board -> Col -> Position -> Maybe Board
