@@ -77,7 +77,8 @@ makeMove board color pos
 isCellValidMove :: Col -> Position -> Board -> Bool
 isCellValidMove color pos board
     | (posWithinBounds pos board) && (cellAtPosIsEmpty pos board)
-        && not (checkFourAndFour (pos,color) board)                       = True
+        && not (checkFourAndFour (pos,color) board)
+        && not (checkThreeAndThree (pos,color) board)                     = True
     | otherwise                                                           = False
 
 -- Checks if position is within bounds of board.
@@ -141,8 +142,11 @@ checkFourAndFour piece board
 
 -- Checks if the rule "three and three" is being broken by making a move at the given position.
 checkThreeAndThree :: (Position, Col) -> Board -> Bool
-checkThreeAndThree piece board = undefined
-
+checkThreeAndThree piece board
+    | length (filter (==3) xs) >= 2             = True
+    | otherwise                                 = False
+    where xs = [checkConsecutiveInDirectionWithOpenSpace x (Just piece) board | x <- xss]
+          xss = [NorthEast, North, NorthWest, West, SouthWest, South, SouthEast, East]
 
 -- Checks how many pieces in a row in a direction.
 -- The color of the piece is derived from the given piece.
@@ -153,6 +157,15 @@ checkConsecutiveInDirection dir piece board
     | isNothing nextpiece                                   = 1
     | isSameColor (fromJust piece) (fromJust nextpiece)     = 1 + checkConsecutiveInDirection dir nextpiece board
     | otherwise                                             = 1
+    where nextpiece = getPieceInDirection dir (fromJust piece) board
+
+-- Checks for rows of pieces, with an open space at end.
+-- If the row is blocked at the end, the function returns a negative value.
+checkConsecutiveInDirectionWithOpenSpace :: Direction -> Maybe (Position, Col) -> Board -> Int
+checkConsecutiveInDirectionWithOpenSpace dir piece board
+    | isNothing nextpiece                                   = 1
+    | isSameColor (fromJust piece) (fromJust nextpiece)     = 1 + checkConsecutiveInDirectionWithOpenSpace dir nextpiece board
+    | otherwise                                             = -1000
     where nextpiece = getPieceInDirection dir (fromJust piece) board
 
 -- Function to return whatever is in the position in a direction from the given piece.
