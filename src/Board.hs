@@ -56,11 +56,14 @@ attemptMove pos world
     where updatedBoard = makeMove (board world) (turn world) pos
 
 -- Checks if the world's board has a winner, and adds that player as the winner in the world if thats the case.
+-- A win is not possible before the 9th move - therefore the game does not check for them until then.
 isWinner :: World -> World
 isWinner world
-    | isNothing possibleWinner          = world
-    | otherwise                         = World (board world) (turn world) (possibleWinner)
+    | (length $ pieces $ board $ world) < earliestWin = world
+    | isNothing possibleWinner                        = world
+    | otherwise                                       = World (board world) (turn world) (possibleWinner)
     where possibleWinner = checkWon (board world)
+          earliestWin = ((target $ board $ world) * 2) - 1
 
 -- Play a move on the board; return 'Nothing' if the move is invalid
 -- (e.g. outside the range of the board, or there is a piece already there)
@@ -103,18 +106,18 @@ pieceAtPos pos board
 -- Check whether the board is in a winning state for either player.
 -- Returns 'Nothing' if neither player has won yet
 -- Returns 'Just c' if the player 'c' has won
--- Proposed slight change: Assume this function is called after every move has been completed and only
--- at the position of the last added piece
 checkWon :: Board -> Maybe Col
 checkWon board
-    | checkWonAllDirections latestPiece board   = Just $ snd latestPiece
-    | otherwise                                 = Nothing
-    where latestPiece = head (pieces board)
+    | True `elem` winningRows                     = Just $ snd latestPiece
+    | otherwise                                   = Nothing
+    where listOfPieces = [x | x <- (pieces board), snd x == snd latestPiece]
+          latestPiece = head $ pieces board
+          winningRows = map (checkWonAllDirections board) listOfPieces
 
 -- Runs the checking functions in all directions looking for a winning condition for the piece provided.
 -- Could (should) be optimized to not have to run all directions - just one direction returning true is enough.
-checkWonAllDirections :: (Position, Col) -> Board -> Bool
-checkWonAllDirections piece board
+checkWonAllDirections :: Board -> (Position, Col) -> Bool
+checkWonAllDirections board piece
     | True `elem` xs        = True
     | otherwise             = False
     where xs = [checkWonDirection x piece board | x <- xss]
@@ -127,13 +130,19 @@ checkWonDirection dir piece board
     | checkConsecutiveInDirection dir (Just piece) board == (target board) = True
     | otherwise                                                            = False
 
--- Checks if the rule of "four and four" is being broken by making a move at the given position.
+-- Checks if the rule "four and four" is being broken by making a move at the given position.
+-- Possibly a too simple implementation?
 checkFourAndFour :: (Position, Col) -> Board -> Bool
 checkFourAndFour piece board
-    | length (filter (==4) xs) == 2             = True
+    | length (filter (==4) xs) >= 2             = True
     | otherwise                                 = False
     where xs = [checkConsecutiveInDirection x (Just piece) board | x <- xss]
           xss = [NorthEast, North, NorthWest, West, SouthWest, South, SouthEast, East]
+
+-- Checks if the rule "three and three" is being broken by making a move at the given position.
+checkThreeAndThree :: (Position, Col) -> Board -> Bool
+checkThreeAndThree piece board = undefined
+
 
 -- Checks how many pieces in a row in a direction.
 -- The color of the piece is derived from the given piece.
