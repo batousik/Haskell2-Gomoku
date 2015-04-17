@@ -32,8 +32,8 @@ data Board = Board { size :: Int,
                    }
   deriving Show
 
--- Default board is 6x6, target is 3 in a row, no initial pieces
-initBoard = Board 10 5 []
+-- Default board is 19x19, 5 in a row and no pieces.
+initBoard = Board 19 5 []
 
 -- Feel free to extend this, and 'Board' above with anything you think
 -- will be useful (information for the AI, for example, such as where the
@@ -66,15 +66,16 @@ isWinner world
 -- (e.g. outside the range of the board, or there is a piece already there)
 makeMove :: Board -> Col -> Position -> Maybe Board
 makeMove board color pos
-    | isCellValidMove pos board = Just (Board (size board) (target board) ((pos, color):(pieces board)))
+    | isCellValidMove color pos board = Just (Board (size board) (target board) ((pos, color):(pieces board)))
     | otherwise = Nothing
 
 -- Checks if a position is valid to move to.
 -- If cell is within bounds and empty.
-isCellValidMove :: Position -> Board -> Bool
-isCellValidMove pos board
-    | (posWithinBounds pos board) && (cellAtPosIsEmpty pos board) = True
-    | otherwise                                                   = False
+isCellValidMove :: Col -> Position -> Board -> Bool
+isCellValidMove color pos board
+    | (posWithinBounds pos board) && (cellAtPosIsEmpty pos board)
+        && not (checkFourAndFour (pos,color) board)                       = True
+    | otherwise                                                           = False
 
 -- Checks if position is within bounds of board.
 posWithinBounds :: Position -> Board -> Bool
@@ -125,6 +126,14 @@ checkWonDirection :: Direction -> (Position, Col) -> Board -> Bool
 checkWonDirection dir piece board
     | checkConsecutiveInDirection dir (Just piece) board == (target board) = True
     | otherwise                                                            = False
+
+-- Checks if the rule of "four and four" is being broken by making a move at the given position.
+checkFourAndFour :: (Position, Col) -> Board -> Bool
+checkFourAndFour piece board
+    | length (filter (==4) xs) == 2             = True
+    | otherwise                                 = False
+    where xs = [checkConsecutiveInDirection x (Just piece) board | x <- xss]
+          xss = [NorthEast, North, NorthWest, West, SouthWest, South, SouthEast, East]
 
 -- Checks how many pieces in a row in a direction.
 -- The color of the piece is derived from the given piece.

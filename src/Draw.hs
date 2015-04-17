@@ -50,9 +50,9 @@ getCircleYCoord board pos = boardTop - (squareHeight*(fromIntegral $ snd pos)) -
     where squareHeight = boardHeight/(fromIntegral $ size board)
 
 getCircleWithColor :: Board -> (Position, Col) -> Picture
-getCircleWithColor board (x, White) = Color white $ ThickCircle circleRadius 30
+getCircleWithColor board (x, White) = Color white $ ThickCircle circleRadius 15
     where circleRadius = ((boardWidth/(fromIntegral $ size board))/2)*0.50
-getCircleWithColor board (x, Black) = Color black $ ThickCircle circleRadius 30
+getCircleWithColor board (x, Black) = Color black $ ThickCircle circleRadius 15
     where circleRadius = ((boardWidth/(fromIntegral $ size board))/2)*0.50
 
 -- Draws the grid of the board
