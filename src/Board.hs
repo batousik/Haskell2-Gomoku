@@ -143,18 +143,27 @@ checkWonDirection dir piece board
 -- Possibly a too simple implementation?
 checkFourAndFour :: (Position, Col) -> Board -> Bool
 checkFourAndFour piece board
-    | length (filter (==4) xs) >= 2             = True
-    | otherwise                                 = False
+    | length (filter (==4) finalList) >= 2              = True
+    | otherwise                                         = False
     where xs = [checkConsecutiveInDirection x (Just piece) board | x <- xss]
           xss = [NorthEast, North, NorthWest, West, SouthWest, South, SouthEast, East]
+          ys = [checkConsecutiveInDirection y (Just piece) board | y <- yss]
+          yss = [SouthWest, South, SouthEast, East, NorthEast, North, NorthWest, West]
+          zippedList = zipWith (+) xs ys
+          finalList = map (\x -> x - 1) zippedList
 
 -- Checks if the rule "three and three" is being broken by making a move at the given position.
 checkThreeAndThree :: (Position, Col) -> Board -> Bool
 checkThreeAndThree piece board
-    | length (filter (==3) xs) >= 2             = True
-    | otherwise                                 = False
+    | length (filter (==3) finalList) >= 2             = True
+    | otherwise                                        = False
     where xs = [checkConsecutiveInDirectionWithOpenSpace x (Just piece) board | x <- xss]
           xss = [NorthEast, North, NorthWest, West, SouthWest, South, SouthEast, East]
+          ys = [checkConsecutiveInDirectionWithOpenSpace y (Just piece) board | y <- yss]
+          yss = [SouthWest, South, SouthEast, East, NorthEast, North, NorthWest, West]
+          zippedList = zipWith (+) xs ys
+          finalList = map (\x -> x - 1) zippedList
+
 
 -- Checks how many pieces in a row in a direction.
 -- The color of the piece is derived from the given piece.
@@ -197,7 +206,6 @@ getPosInDirection SouthEast (x,y) = (x + 1, y - 1)
 getPosInDirection East (x,y)      = (x + 1, y)
 
 -- Checks if two pieces are of the same color.
-
 isSameColor :: (Position, Col) -> (Position, Col) -> Bool
 isSameColor piece1 piece2
     | snd piece1 == snd piece2 = True
