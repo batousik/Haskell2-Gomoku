@@ -28,6 +28,8 @@ handleInput (EventKey (MouseButton LeftButton) Up m (x, y)) b
 -- Could use spacebar as the button to revert one move (extension).
 handleInput (EventKey (Char 'u') Up _ _) b
     = handleUndo b
+handleInput (EventKey (Char 'r') Up _ _) b
+    = handleReset b
 handleInput (EventKey (Char k) Up _ _) b
     = trace ("Key " ++ show k ++ " up") b
 handleInput e b = b
@@ -52,6 +54,10 @@ getBoardCoordFromClick (x, y) board = ((floor $ distanceFromLeft/pixelsPerColumn
           pixelsPerColumnY = boardHeight/numberOfColumns
           distanceFromLeft = x-windowLeft
           distanceFromTop = windowTop-y
+
+-- Handles resetting the board to its initial state.
+handleReset :: World -> World
+handleReset world = initWorld
 
 -- Handles undoing a move. Reverts the turn.
 -- Does nothing if there are no pieces on the board.

@@ -47,6 +47,14 @@ data World = World { board :: Board,
 
 initWorld = World initBoard Black Nothing
 
+-- Uses command line arguments to determine settings of the game.
+
+getSettingsFromCmdLine :: IO [String] -> World
+getSettingsFromCmdLine xs = undefined
+    {-| length xs == 0            = World initBoard Black Nothing
+    | otherwise                   =-}
+-- Parse input list somehow?
+
 -- Attempts to play a move. If move is successful return updated world. Include winner if there is one.
 -- If move wasnt successful, return unchanged world.
 attemptMove :: Position -> World -> World
