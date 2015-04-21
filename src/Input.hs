@@ -30,9 +30,25 @@ handleInput (EventKey (Char 'u') Up _ _) b
     = handleUndo b
 handleInput (EventKey (Char 'r') Up _ _) b
     = handleReset b
+--handleInput (EventKey (Char 's') Up _ _) b
+--    = handleSave b
 handleInput (EventKey (Char k) Up _ _) b
     = trace ("Key " ++ show k ++ " up") b
 handleInput e b = b
+
+-- Function to handle saving the current World to a file.
+-- Stores the content in JSON format.
+{-handleSave :: World -> World
+handleSave world = do
+    returnWorld <- saveWorld world
+    return returnWorld
+
+-- Saves the world to a file
+saveWorld :: World -> IO ()
+saveWorld world = do
+    jsonWorld <- worldToJson world
+
+worldToJson :: World ->-}
 
 -- Function to handle mouse clicks from the user.
 -- IMPORTANT: Needs to also check whether the current turn belongs to a human player.

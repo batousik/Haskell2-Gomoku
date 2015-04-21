@@ -2,6 +2,7 @@ module Board where
 
 import Data.Maybe
 import Debug.Trace
+import Control.Monad
 
 data Col = Black | White
     deriving (Show, Eq)
@@ -48,12 +49,24 @@ data World = World { board :: Board,
 initWorld = World initBoard Black Nothing
 
 -- Uses command line arguments to determine settings of the game.
+-- Assumes following order of commands: size of board, pieces in a row required to win, AI player, extra rules active.
+{-getSettingsFromCmdLine :: IO [String] -> World
+getSettingsFromCmdLine xs = do
+    ys <- xs
+    let xslen = length ys
+    when (xslen == 0 || xslen > 4) return World initBoard Black Nothing
+    return World (Board (getIOBoardSize (xs !! 0)) (getIOTarget (xs !! 1)) []) Black Nothing
 
-getSettingsFromCmdLine :: IO [String] -> World
-getSettingsFromCmdLine xs = undefined
-    {-| length xs == 0            = World initBoard Black Nothing
-    | otherwise                   =-}
--- Parse input list somehow?
+-- Gets sizes from IO String coming from cmd line
+getIOBoardSize :: IO String -> Int
+getIOBoardSize string = do 
+    size <- read string :: Int
+    return size
+
+getIOTarget :: IO String -> Int
+getIOTarget string = do
+    target <- read string :: Int
+    return target-}
 
 -- Attempts to play a move. If move is successful return updated world. Include winner if there is one.
 -- If move wasnt successful, return unchanged world.
@@ -92,11 +105,11 @@ isCellValidMove color pos board
 -- Checks if position is within bounds of board.
 posWithinBounds :: Position -> Board -> Bool
 posWithinBounds pos board
-    | fst pos < 0             = False
-    | snd pos < 0             = False
-    | fst pos > size board    = False
-    | snd pos > size board    = False
-    | otherwise               = True
+    | fst pos < 0              = False
+    | snd pos < 0              = False
+    | fst pos >= size board    = False
+    | snd pos >= size board    = False
+    | otherwise                = True
 
 -- Checks if position is empty on board (does not guarantee cell is within bounds of board)
 cellAtPosIsEmpty :: Position -> Board -> Bool
