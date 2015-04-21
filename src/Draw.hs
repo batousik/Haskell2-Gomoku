@@ -19,11 +19,15 @@ boardTop = boardHeight/2
 drawWorld :: World -> Picture
 drawWorld w = pictures $ [drawGrid w,drawPieces w,drawBottomText w,drawTopText w]
 
+-- Draws the text present at the top of the window.
+-- Prints the winner if there is one.
 drawTopText :: World -> Picture
 drawTopText world
     | isNothing (winner world)   = Blank
     | otherwise                  = Translate 0 (boardTop + 40) $ Scale 0.2 0.2 $ Color white $ Text ("Winner is: " ++ (show $ fromJust $ winner world))
 
+-- Draws the text at the bottom of the window
+-- Prints the player who currently holds the turn
 drawBottomText :: World -> Picture
 drawBottomText world = Translate 0 (boardTop - boardHeight - 50) $ Scale 0.2 0.2 $ Color white $ Text ("Current turn: " ++ (show $ turn world))
 

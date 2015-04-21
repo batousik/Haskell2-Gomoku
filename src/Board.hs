@@ -50,23 +50,16 @@ initWorld = World initBoard Black Nothing
 
 -- Uses command line arguments to determine settings of the game.
 -- Assumes following order of commands: size of board, pieces in a row required to win, AI player, extra rules active.
-{-getSettingsFromCmdLine :: IO [String] -> World
+getSettingsFromCmdLine :: IO [String] -> IO World
 getSettingsFromCmdLine xs = do
     ys <- xs
     let xslen = length ys
-    when (xslen == 0 || xslen > 4) return World initBoard Black Nothing
-    return World (Board (getIOBoardSize (xs !! 0)) (getIOTarget (xs !! 1)) []) Black Nothing
+        returnWorld = World (Board (getIntFromString (ys !! 0)) (getIntFromString (ys !! 1)) []) Black Nothing
+    return returnWorld
 
 -- Gets sizes from IO String coming from cmd line
-getIOBoardSize :: IO String -> Int
-getIOBoardSize string = do 
-    size <- read string :: Int
-    return size
-
-getIOTarget :: IO String -> Int
-getIOTarget string = do
-    target <- read string :: Int
-    return target-}
+getIntFromString :: String -> Int
+getIntFromString string = read string :: Int
 
 -- Attempts to play a move. If move is successful return updated world. Include winner if there is one.
 -- If move wasnt successful, return unchanged world.
