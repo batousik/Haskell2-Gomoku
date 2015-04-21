@@ -9,8 +9,9 @@ import Data.Maybe
 
 import Debug.Trace
 
-boardHeight = 600
-boardWidth = 600
+boardHeight = 500
+boardWidth = 500
+
 windowLeft = (-boardWidth/2)
 windowTop = boardHeight/2
 

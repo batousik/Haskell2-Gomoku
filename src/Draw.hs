@@ -5,8 +5,8 @@ import Board
 
 import Data.Maybe
 
-boardHeight = 600
-boardWidth = 600
+boardHeight = 500
+boardWidth = 500
 
 boardLeft = (-boardWidth/2)
 boardTop = boardHeight/2

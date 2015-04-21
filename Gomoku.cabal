@@ -3,7 +3,7 @@ version:             0.9.0.0
 synopsis:            Gomoku (5-in-a-row) game
 -- description:         
 homepage:            http://studres.cs.st-andrews.ac.uk/CS2006-APP
-author:              Edwin Brady with additions by: 120014756, 130004910, 
+author:              Edwin Brady with additions by: 120014756, 130004910, 130017964
 maintainer:          ecb10@st-andrews.ac.uk
 category:            Game
 build-type:          Simple

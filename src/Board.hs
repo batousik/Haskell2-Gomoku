@@ -91,8 +91,8 @@ makeMove board color pos
 isCellValidMove :: Col -> Position -> Board -> Bool
 isCellValidMove color pos board
     | (posWithinBounds pos board) && (cellAtPosIsEmpty pos board)
-        && not (checkFourAndFour (pos,color) board)
-        && not (checkThreeAndThree (pos,color) board)                     = True
+        && not (checkFourAndFour (pos,color) board)                       = True
+        {-&& not (checkThreeAndThree (pos,color) board)-}                     
     | otherwise                                                           = False
 
 -- Checks if position is within bounds of board.
